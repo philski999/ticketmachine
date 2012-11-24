@@ -2,11 +2,15 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:integration="http://www.springframework.org/schema/integration"
 	default-init-method="init"
 	xmlns:p="http://www.springframework.org/schema/p"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-		 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-3.0.xsd
+						http://www.springframework.org/schema/integration
+           				http://www.springframework.org/schema/integration/spring-integration-2.0.xsd">
 	
 
 	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
@@ -29,17 +33,22 @@
     </bean>
     
    	<!-- 
-   	   	 Set the repositoryUrl according to your project's name using a JVM system property or in properties file on the classpath.
-   	     e.g. -DrepositoryUrl=https://wm.define.nu/api/2.0/bigproject/subsystem/issues
-   	     
    	     The initialLoadLimit parameter allows you to limit the number of tickets to be loaded, useful for testing
    	     Set to -1 (the default) to load all tickets.
     -->
     <bean id="define3TicketFactory" class="define3TicketSource.Define3TicketFactory"
     	p:initialLoadLimit="${initialLoadLimit:-1}"
-    	p:repositoryUrl="${repositoryUrl}"
     />
-       
+    
+  	<!-- 
+   	   	 Set the repositoryUrl according to your project's name using a JVM system property or in properties file on the classpath.
+   	     e.g. -DrepositoryUrl=https://wm.define.nu/api/2.0/bigproject/subsystem/issues
+   	--> 
+    <bean id="define3Adapter" class="define3TicketSource.Define3Adapter"
+    	p:repositoryUrl="${repositoryUrl}"
+    	p:restTemplate-ref="restTemplate"
+    />
+    
     <context:component-scan base-package="define3TicketSource"/>
     
     <!-- Specify configuration properties using ticketMachine.properties and make sure its on the class path or use JVM system properties (or both!) -->

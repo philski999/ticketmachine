@@ -5,7 +5,10 @@ import java.util.List;
 
 import ticketApi.Ticket;
 
-public class Define3Ticket implements Ticket {
+/**
+ * The ticket structure supported by #define 3
+ */
+class Define3Ticket implements Ticket {
 
 	private String description;
 	private String summary;

@@ -5,8 +5,11 @@ import org.springframework.stereotype.Component;
 import ticketApi.Ticket;
 import ticketApi.TicketBuilder;
 
+/**
+ * A component that builds #define3 ticket structures from pieces of ticket information
+ */
 @Component
-public class Define3TicketBuilder implements TicketBuilder {
+class Define3TicketBuilder implements TicketBuilder {
 
 	public TicketBuilder setProduct(String product) {
 		ticket.setProduct(product);

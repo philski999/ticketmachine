@@ -6,7 +6,10 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.springframework.http.client.CommonsClientHttpRequestFactory;
 
-public class Define3RequestFactory extends CommonsClientHttpRequestFactory {
+/**
+ * An HTTP client request factory that allows credentials and proxy settings to be set via Spring configuration
+ */
+class Define3RequestFactory extends CommonsClientHttpRequestFactory {
 	
 	// TODO: Update to httpclient 4, probably easiest with shift to Spring 3.1
 	Define3RequestFactory(String username, String password, int timeoutInMilliseconds, String proxyHost, Integer proxyPort)
