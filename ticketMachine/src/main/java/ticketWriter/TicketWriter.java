@@ -14,7 +14,7 @@ import ticketApi.TicketSink;
 import ticketApi.TicketSource;
 
 @Component
-public class TicketWriter {
+public class TicketWriter implements TicketSink {
 	
 	TicketSource ticketSource;
 	private ObjectMapper mapper;
@@ -25,31 +25,13 @@ public class TicketWriter {
 		ticketSource = aSource;
 	}
 	
-	public void writeTickets() {
-		ticketSource.init();
-
-		mapper = new ObjectMapper();
-		JsonFactory f = new JsonFactory();
-		
-		try {
-			generator = f.createJsonGenerator(System.out);
-			generator.useDefaultPrettyPrinter();
-			generator.writeStartArray();
-
-			ticketSource.fill(new SinkAdapter());
-
-			generator.writeEndArray();
-			generator.close();
-		} catch (JsonGenerationException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+	// Insert a ticket into the writer
+	public void addTicket(Ticket ticket) {
+		if (generator == null) {
+			startOutput();
 		}
-	}
-	
-	private class SinkAdapter implements TicketSink {
-
-		public void addTicket(Ticket ticket) {
+		
+		if (generator != null) {
 			try {
 				mapper.writeValue(generator, ticket);
 			} catch (JsonGenerationException e) {
@@ -59,6 +41,38 @@ public class TicketWriter {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	// Close the output
+	public void closeOutput() {
+		try {
+			generator.writeEndArray();
+			generator.close();
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	// Initialise the output
+	private void startOutput() {
+		mapper = new ObjectMapper();
+		JsonFactory f = new JsonFactory();
+		
+		try {
+			generator = f.createJsonGenerator(System.out);
+			generator.useDefaultPrettyPrinter();
+			generator.writeStartArray();
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+			mapper = null;
+			generator = null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			mapper = null;
+			generator = null;
 		}
 	}
 }

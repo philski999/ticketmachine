@@ -29,6 +29,7 @@ public class Define3TicketSource implements TicketSource {
 	private TicketBuilder builder;
 	private RestTemplate restTemplate;
 	private Pattern responseExtractor;
+	private boolean initialised;
 
     private Logger logger = LoggerFactory.getLogger(Define3TicketSource.class);
     
@@ -53,22 +54,9 @@ public class Define3TicketSource implements TicketSource {
 		repositoryUrl = aRepositoryUrl;
 	}
 	
-	public void init() {
-		// A regular expression that will strip the while(1); cross site scripting protection from responses
-		responseExtractor = Pattern.compile("while\\(1\\);/\\*(.*)\\*/");
-
-		// Pull the index
-		logger.debug("Pulling the #define3 ticket index");
-		ResponseEntity<String> response = restTemplate.getForEntity(repositoryUrl, String.class);
-				
-		parsedTicketIndex = extractParsedResponse(response);
-		
-		logger.trace("#define3 ticket source initialisation complete");
-	}
-	
-	
 	@SuppressWarnings("unchecked")
 	public void fill(TicketSink sink) {
+		init();
 		for (Object element : (List<Object>)parsedTicketIndex) {
 			// Allow a limit to be set on the number of tickets to load
 			if (loadLimit == 0)
@@ -84,6 +72,7 @@ public class Define3TicketSource implements TicketSource {
 	
 	@SuppressWarnings("unchecked")
 	public List<Ticket> findAllTickets() {
+		init();
 		List<Ticket> ticketList = new ArrayList<Ticket>();
 		
 		for (Object element : (List<Object>)parsedTicketIndex) {
@@ -100,6 +89,24 @@ public class Define3TicketSource implements TicketSource {
 		
 		return ticketList;
 	}
+	
+	private void init() {
+		if (!initialised) {
+			// A regular expression that will strip the while(1); cross site scripting protection from responses
+			responseExtractor = Pattern.compile("while\\(1\\);/\\*(.*)\\*/");
+
+			// Pull the index
+			logger.debug("Pulling the #define3 ticket index");
+			ResponseEntity<String> response = restTemplate.getForEntity(repositoryUrl, String.class);
+					
+			parsedTicketIndex = extractParsedResponse(response);
+			
+			logger.trace("#define3 ticket source initialisation complete");
+			
+			initialised = true;			
+		}
+	}
+	
 	
 	private Object extractParsedResponse(ResponseEntity<String> response) {
 		Object parsedResponse = null;
