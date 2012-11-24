@@ -6,7 +6,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ticketApi.TicketSource;
 import ticketWriter.TicketWriter;
 
-
 public class TicketMachine {
 	public static void main(String[] args) {
 		AbstractApplicationContext appContext =
