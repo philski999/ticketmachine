@@ -1,0 +1,1020 @@
+===================
+#define Tracker API
+===================
+
+.. contents:: Contents
+   :depth: 2
+.. sectnum::
+
+Document Conventions
+====================
+
+The #define issuetracker is associated with an account and a project. The account and project
+relevant to all operations must always preceed the URLs listed below, that is, all
+URLs should be prefixed with ``/api/2.0/<account>/<project>``. For brevity this part of
+the URLs are omitted in all the operations listed below. This means that, for instance,
+to list all components of product XX in the account/project "My Account/My Project" use 
+``GET /api/2.0/My+Account/My+Project/XX/components``, which is shortened to ``GET /XX/components``
+below.
+
+
+Issues
+======
+
+These represent the #define bugs/tasks/enhancements etc that are associated with a project.
+
+
+List Issues
+-----------
+
+**GET /issues** - List all issues available for the account/project. The list can be filterered by
+adding criteria in the form of parameters, eg ``status=New&status=Assigned``.
+
+**Parameters:** ``columns`` (*optional*). A list of columns to display for each issue in the list.
+The keyword ``all`` can be used to show all columns. 
+``format`` (*optional*) the format of the issue list. (See `Issue Report Formats`_).
+
+**Body:** None.
+
+**Response codes:** ``400``, ``200``
+
+**Response headers:** None.
+
+**Sample response:** ``GET /demotest/demotest/issues``
+
+.. code-block:: text
+
+	while(1);/*[
+	{"status":"New",
+	     "product":
+	        {"project":
+	            {"href":"https://dev.planetdefine.net/api/2.0/projects/7",
+	             "name":"demotest",
+	             "title":"DemoTest"},
+	         "enable":true,
+	         "name":"Product 1",
+	         "href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/products/7"},
+	     "type":"Enhancement",
+	     "summary":"Number III",
+	     "priority":"Medium",
+	     "href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/issues/3",
+	     "owner":
+	        {"href":"https://dev.planetdefine.net/api/2.0/people/7",
+	         "email":"annika.maltesson@logica.com",
+	         "name":"Annika Maltesson"},
+	     "resolution":null},
+	    {"status":"New",
+	     "product":
+	        {"project":
+	            {"href":"https://dev.planetdefine.net/api/2.0/projects/7",
+	             "name":"demotest",
+	             "title":"DemoTest"},
+	         "enable":true,
+	         "name":"Product 1",
+	         "href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/products/7"},
+	     "type":"Enhancement",
+	     "summary":"Number IV",
+	     "priority":"Medium",
+	     "href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/issues/4",
+	     "owner":
+	        {"href":"https://dev.planetdefine.net/api/2.0/people/7",
+	         "email":"annika.maltesson@logica.com",
+	         "name":"Annika Maltesson"},
+	     "resolution":null},
+	    ...
+	]*/
+
+Show Issue
+----------
+
+**GET /issues/<id>** - Show details of issue with id ``<id>``.
+
+**Parameters:** ``columns`` (*optional*). A list of columns to display for the issue.
+The keyword ``all`` can be used to show all columns.
+
+**Body:** None.
+
+**Response codes:** ``400``, ``200``
+
+**Response headers:** None.
+
+**Sample response:** ``GET /demotest/demotest/issues/3?columns=all``
+
+.. code-block:: text
+
+	while(1);/*
+	{"depends_on":[
+	    {"href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/issues/1",
+	     "summary":"Number I"},
+	    {"href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/issues/2",
+	     "summary":"Number II"}],
+	 "actual_hours":null,
+	 "href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/issues/3",
+	 "owner":
+	    {"href":"https://dev.planetdefine.net/api/2.0/people/7",
+	     "email":"annika.maltesson@logica.com",
+	     "name":"Annika Maltesson"},
+	 "customfields":[],
+	 "qa_contact":null,
+	 "log":[],
+	 "priority":"Medium",
+	 "version":
+	    {"enable":true,
+	     "href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/Product%201/versions/7",
+	     "name":"1.0"},
+	 "actual_start":null,
+	 "type":"Enhancement",
+	 "status":"New",
+	 "product":
+	    {"project":
+	        {"href":"https://dev.planetdefine.net/api/2.0/projects/7",
+	         "name":"demotest",
+	         "title":"DemoTest"},
+	     "enable":true,
+	     "name":"Product 1",
+	     "href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/products/7"},
+	 "blocks":[],
+	 "description":null,
+	 "reporter":
+	    {"href":"https://dev.planetdefine.net/api/2.0/people/7",
+	     "email":"annika.maltesson@logica.com",
+	     "name":"Annika Maltesson"},
+	 "component":
+	    {"qa":null,
+	     "owner":null,
+	     "enable":true,
+	     "name":"Component 1",
+	     "href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/Product%201/components/7"},
+	 "est_hours":null,
+	 "planned_start":null,
+	 "milestone":
+	    {"due_date":null,
+	     "enable":true,
+	     "description":null,
+	     "name":"Milestone 1",
+	     "project":
+	        {"href":"https://dev.planetdefine.net/api/2.0/projects/7",
+	         "name":"demotest",
+	         "title":"DemoTest"},
+	     "href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/milestones/7",
+	     "complete":false},
+	 "planned_stop":null,
+	 "created":"2009-06-29T09:38:32.331436+00:00",
+	 "actual_stop":null,
+	 "modified":"2009-06-29T09:38:32.331436+00:00",
+	 "summary":"Number III",
+	 "project":
+	    {"title":"DemoTest",
+	     "manager":
+	        {"href":"https://dev.planetdefine.net/api/2.0/people/12",
+	         "email":"ulrik.lemke@logica.com",
+	         "name":"Ulrik Lemke"},
+	     "href":"https://dev.planetdefine.net/api/2.0/projects/7",
+	     "account":
+	        {"href":"https://dev.planetdefine.net/api/2.0/accounts/6",
+	         "name":"demotest",
+	         "title":"DemoTest"},
+	     "name":"demotest"},
+	 "issue_id":3,
+	 "resolution":null,
+	 "order":null,
+	 "remaining_hours":null}
+	 */
+
+
+List Queries 
+------------ 
+
+**GET /issues/queries** - List saved queries available. The ``href`` attribute on each query
+can be followed to execute that particular query. The qstring can be appended to `List Issues`_,
+with ``$$user`` replaced with a valid user id/email.
+
+**Parameters:** None.
+
+**Body:** None.
+
+**Response codes:** ``400``, ``200``
+
+**Response headers:** None.
+
+**Sample response:** ``GET /demotest/demotest/issues/queries``
+
+.. code-block:: text
+
+  while(1);/*[
+    {"description":"",
+     "href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/issues/queries/1",
+     "qstring":"?owner=$$user&groupby=milestone&col=priority&col=type&col=summary&col=status&col=resolution&col=product&col=milestone",
+     "scope":"hub",
+     "id":1,
+     "name":"My issues"},
+    {"description":"",
+     "href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/issues/queries/2",
+     "qstring":"?qa_contact=$$user&status=%s&groupby=milestone&col=priority&col=type&col=summary&col=status&col=resolution&col=owner&col=product&col=milestone",
+     "scope":"hub",
+     "id":2,
+     "name":"My pending QA issues"}
+  ]*/
+
+Query 
+-----
+
+**GET /issues/queries/<id or name>** - Perform a saved query. ``id`` or ``name`` 
+can be found in the `List Queries`_ response. 
+
+**Parameters:** ``format`` (*optional*) the format of the issue list. (See `Issue Report Formats`_).
+
+**Body:** None.
+
+**Response codes:** ``400``, ``200``
+
+**Response headers:** None.
+
+**Sample response:** ``GET /demotest/demotest/issues/queries`` - See `List Issues`_.
+
+
+Create Issue
+------------
+
+**POST /issues** - Create a new issue. Values for the new issue can be passed both as
+parameters and in the JSON body, where the body parameters take precedence. Nestled
+values must be passed in the body (parameters are not parsed as JSON). In the example
+below ``owner`` is referenced by id; ``reporter`` by email;``milestone`` by name,
+and ``depends_on`` as a list of dictionaries. All of these resources have their own
+lookup methods; for instance `List Components`_. 
+
+Required fields are
+
+- ``type``
+- ``summary``
+- ``description``
+- ``product``
+- ``component``
+- ``version``
+- ``customfields`` - If there are *required* custom fields configured for this project
+
+
+**Parameters:** Issue fields.
+
+**Body:** JSON.
+
+**Response codes:** ``400``, ``201``
+
+**Response headers:** ``Location``: a URL to the new issue.
+
+**Body format:** Most fields that reference other API resources; such as component and users, can
+be identified by their unique name, id, or as a JSON dictionary (where href is the significant field).
+
+**Sample request:** ``POST /issues?type=Bug``. The issue type can be sent as a URL parameter, 
+and the rest in the body, as seen below.
+
+**Sample request body:**
+
+.. code-block:: text
+
+     {"depends_on":[
+	    {"href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/issues/1",
+	     "summary":"Number I"},
+	    {"href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/issues/2",
+	     "summary":"Number II"}],
+	 "owner": 7,
+	 "customfields":[{"name":"custom_field1","value":"Some value"}],
+	 "qa_contact":null,
+	 "priority":"Medium",
+	 "version":7
+	 "status":"New",
+	 "product":"Product 1",
+	 "description":"Some more details regarding this issue.",
+	 "reporter": "annika.maltesson@logica.com",
+	 "component": 7,
+	 "milestone":"Milestone 1",
+	 "created":"2009-06-29T09:38:32.331436+00:00",
+	 "modified":"2009-06-29T09:38:32.331436+00:00",
+	 "summary":"This is issue is about a serious bug."}
+
+
+Update Issue
+------------
+
+**PUT /issues/<id>** - Update issue with issue_id ``<id>``. A simple way to perform
+an update is to simply retrieve an issue (`Show Issue`_), update the fields you want to change
+and PUT it back to the server. Fields that shouldn't be updated may be omitted. The type of an
+existing issue cannot be changed. The extra field ``comment`` may be included, and will show up
+in the issue's log.
+
+**Parameters:** Issue fields.
+
+**Body:** JSON.
+
+**Response codes:** ``400``, ``200``
+
+**Response headers:** None.
+
+**Sample request:** ``PUT /issues/3?component=Another+Component`` - Set the component of issue to "Another Component".
+
+The same request as a JSON body:
+
+``PUT /issues/3``
+
+.. code-block:: text
+
+   {"component": 
+     {"href": "https://dev.planetdefine.net/api/2.0/Product+1/components/Another+Component"}
+   } 
+
+
+List Attachments
+----------------
+
+**GET /issues/<id>/attachments**
+
+**Parameters:** None.
+
+**Body:** None.
+
+**Response codes:** ``400``, ``200``
+
+**Sample response:**
+
+.. code-block:: text
+
+  while(1);/*[
+    {"comment":"A file with unicode name",
+     "href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/issues/attachments/3",
+     "content_type":"text/plain",
+     "author":
+        {"href":"https://dev.planetdefine.net/api/2.0/people/26",
+         "email":"pontus.enmark@logica.com",
+         "name":"Pontus Enmark"},
+     "date":"2010-03-17T12:11:12.388248+00:00",
+     "issue":
+        {"href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/issues/6",
+         "summary":"A standard Bug issue"},
+     "filename":"blå blö blä.txt"},
+    {"comment":"",
+     "href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/issues/attachments/4",
+     "content_type":"application/octet-stream",
+     "author":
+        {"href":"https://dev.planetdefine.net/api/2.0/people/26",
+         "email":"pontus.enmark@logica.com",
+         "name":"Pontus Enmark"},
+     "date":"2010-03-17T12:12:59.283350+00:00",
+     "issue":
+        {"href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/issues/6",
+         "summary":"A standard Bug issue"},
+     "filename":"ChromeSetup.exe"}]*/
+
+
+Download Attachment
+-------------------
+
+**GET /issues/<issue id>/attachments/<id>** - Download issue attachment identified by ``<id>``
+(Linked from `List Attachments`_).
+ 
+
+Upload Attachment
+-----------------
+
+**POST /issues/<id>/attachments** - Upload an attachment to this issue. 
+Content-type of the request should be application/octet-stream.
+
+**Parameters:** 
+
+- ``author`` (*optional*) - defaults to the logged-on user.
+- ``filename`` - required
+- ``date`` (*optional*) - defaults to current time
+- ``content_type`` (*optional*) - content type of the file (will be guessed if omitted)
+- ``comment`` (*optional*) - An optional comment
+
+**Body:** The contents of the file.
+
+**Response codes:** ``400``, ``200``
+
+
+List Notifications
+------------------
+
+**GET /issues/<id>/notifications** - List users currently being notified to changes to this issue.
+
+**Parameters:** None.
+
+**Sample response:** ``GET /issues/6/notifications``
+
+.. code-block:: text
+
+  while(1);/*[
+    {"href":"https://dev.planetdefine.net/api/2.0/people/5",
+     "email":"marcus.kovacs@logica.com",
+     "name":"Marcus Kovács"},
+    {"href":"https://dev.planetdefine.net/api/2.0/people/26",
+     "email":"pontus.enmark@logica.com",
+     "name":"Pontus Enmark"}
+  ]*/
+
+
+Add Notifications
+-----------------
+
+**POST /issues/<id>/notifications** - Add notification(s) to this issue. 
+Either by sending a parameter list of users, or posting a JSON list of users in the body.
+A user can be posted multiple times; the notifications are considered a set. The user(s) must
+have permission to view the issue in question.
+
+**Parameters:** ``user`` (*optional*) - list of user identifiers (eg user=1&user=2&user=pontus.enmark\@logica.com).
+
+**Body:** JSON.
+
+**Sample request:** The request ``POST /issues/6/notifications?user=1&user=pontus.enmark@logica.com`` with body
+
+.. code-block:: text
+
+  [{"href":"https://dev.planetdefine.net/api/2.0/people/5","email":"marcus.kovacs@logica.com"},
+   4}
+  ]
+
+will add four users to the notification of this issue.
+ 
+
+Delete Notifications
+--------------------
+
+**DELETE /issues/<id>/notifications** - Same as `Add Notifications`_, only remove the users sent instead of adding them.
+
+
+List Resolutions
+----------------
+
+**GET /issues/<id or issue type>/resolutions** - Get a list of resolutions available for the given issue.
+The values ``standard`` or ``cure`` may be used instead of an issue id.
+
+**Sample response:** ``GET /issues/standard/resolutions``
+
+.. code-block:: text
+ 
+  while(1);/*
+  ["Fixed","Invalid","Wontfix","Duplicate","Worksforme","Moved"]
+  */
+
+
+List Statuses
+-------------
+
+**GET /issues/<id or issue type>/statuses** - List statuses for issue or issue type.
+The values ``standard`` or ``cure`` may be used instead of an issue id.
+
+**Sample response:** ``GET /issues/cure/statuses``
+
+.. code-block:: text
+
+  while(1);/*
+    ["Registered","Submitted","Incomplete","For decision","Decided","On hold","Implemented","Delivered","Not approved","Closed"]
+  */
+
+
+Issue Report Formats
+--------------------
+
+**GET /issues/formats**: List the available formats. Use ``GET /issues?format=ods`` 
+to download the issue list in OpenDocument format.  
+
+**Sample response:**
+
+.. code-block:: text
+
+  while(1);/*[
+    {"description":"OpenDocument (.ods)",
+     "mime_type":"application/vnd.oasis.opendocument.spreadsheet",
+     "name":"ods"},
+    {"description":"OpenOffice 1.x (.sxc)",
+     "mime_type":"application/vnd.sun.xml.calc",
+     "name":"sxc"},
+    {"description":"Excel 97/2000/XP (.xls)",
+     "mime_type":"application/vnd.ms-excel",
+     "name":"xls"},
+    {"description":"Excel 5.0/95 (.xls)",
+     "mime_type":"application/vnd.ms-excel",
+     "name":"xls95"},
+    {"description":"Adobe PDF (.pdf)",
+     "mime_type":"application/pdf",
+     "name":"pdf"}
+  ]*/
+
+
+Timesheets
+----------
+
+**GET /issues/<id>/timesheets** - List timesheets for this issue.
+
+**Parameters:** ``groupby`` (*optional*) - possible values are user and time_account 
+
+**Sample response:** ``GET /issues/6/timesheets``
+
+.. code-block:: text
+
+  while(1);/*[
+    {"comment":"I once saw a man",
+     "time_account":
+        {"href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/timeaccounts/4",
+         "name":"Analysis & design",
+         "reference":"Kalle P",
+         "active":true,
+         "description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean et orci a turpis eleifend luctus vitae ac metus. Vivamus sit amet augue augue\r\n"},
+     "created":"2010-03-17T12:47:12.049075+00:00",
+     "hours":3,
+     "user":
+        {"href":"https://dev.planetdefine.net/api/2.0/people/26",
+         "email":"pontus.enmark@logica.com",
+         "name":"Pontus Enmark"},
+     "date":"2010-03-17"},
+    {"comment":"Who ate a lot of ham",
+     "time_account":
+        {"href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/timeaccounts/4",
+         "name":"Analysis & design",
+         "reference":"Kalle P",
+         "active":true,
+         "description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean et orci a turpis eleifend luctus vitae ac metus. Vivamus sit amet augue augue\r\n"},
+     "created":"2010-03-17T12:47:26.612828+00:00",
+     "hours":4,
+     "user":
+        {"href":"https://dev.planetdefine.net/api/2.0/people/26",
+         "email":"pontus.enmark@logica.com",
+         "name":"Pontus Enmark"},
+     "date":"2010-03-17"},
+    {"comment":"Then he vanished from the face of the earth",
+     "time_account":
+        {"href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/timeaccounts/4",
+         "name":"Analysis & design",
+         "reference":"Kalle P",
+         "active":true,
+         "description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean et orci a turpis eleifend luctus vitae ac metus. Vivamus sit amet augue augue\r\n"},
+     "created":"2010-03-17T12:47:54.307175+00:00",
+     "hours":10,
+     "user":
+        {"href":"https://dev.planetdefine.net/api/2.0/people/26",
+         "email":"pontus.enmark@logica.com",
+         "name":"Pontus Enmark"},
+     "date":"2010-03-17"}
+   ]*/
+
+Custom Fields
+=============
+
+These are the user-created custom fields for issues.
+
+
+List Custom Fields
+------------------
+
+**GET /customfields** - List custom fields available for this project
+
+**Sample response:** ``GET /customfields``
+
+.. code-block:: text
+
+  while(1);/*[
+    {"name":"custom_deliverydate",
+     "title":"Delivery date",
+     "required":true,
+     "href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/customfields/4",
+     "type":"DATE",
+     "order":0},
+    {"name":"custom_randomfield",
+     "title":"random field",
+     "required":false,
+     "href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/customfields/5",
+     "multiline":false,
+     "type":"TEXT",
+     "order":1},
+    {"name":"custom_gore",
+     "title":"Gore",
+     "required":false,
+     "options":[
+        {"id":4,
+         "enable":true,
+         "name":"Very little",
+         "order":1},
+        {"id":5,
+         "enable":true,
+         "name":"Some",
+         "order":2},
+        {"id":6,
+         "enable":true,
+         "name":"Moderate",
+         "order":3},
+        {"id":7,
+         "enable":true,
+         "name":"Dripping",
+         "order":4}],
+     "href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/customfields/6",
+     "type":"ENUM",
+     "order":2}]
+  */
+  
+  
+Show Custom Field
+-----------------
+
+**GET /customfields/<id or name>** - Show details of a custom field
+
+**Sample response:** ``GET /customfields/custom_gore``
+
+.. code-block:: text
+
+  while(1);/*
+	{"name":"custom_gore",
+	 "title":"Gore",
+	 "required":false,
+	 "options":[
+	    {"id":4,
+	     "enable":true,
+	     "name":"Very little",
+	     "order":1},
+	    {"id":5,
+	     "enable":true,
+	     "name":"Some",
+	     "order":2},
+	    {"id":6,
+	     "enable":true,
+	     "name":"Moderate",
+	     "order":3},
+	    {"id":7,
+	     "enable":true,
+	     "name":"Dripping",
+	     "order":4}],
+	 "project":
+	    {"manager":
+	        {"href":"https://dev.planetdefine.net/api/2.0/people/12",
+	         "email":"ulrik.lemke@logica.com",
+	         "name":"Ulrik Lemke"},
+	     "account":
+	        {"href":"https://dev.planetdefine.net/api/2.0/accounts/6",
+	         "name":"demotest",
+	         "title":"DemoTest"},
+	     "href":"https://dev.planetdefine.net/api/2.0/projects/7",
+	     "name":"demotest",
+	     "title":"DemoTest"},
+	 "href":"https://dev.planetdefine.net/api/2.0/demotest/demotest/customfields/6",
+	 "type":"ENUM",
+	 "order":2}
+
+Create Custom Field
+-------------------
+
+**POST /customfields** - Create a new custom field.
+Available fields:
+
+-  ``title`` (*required*) - The title of the field
+-  ``type`` (*required*) - Field type; one of "TEXT", "DATE", "NUMB","ENUM"
+-  ``required`` (*required*) - Whether this field is required by new issues - boolean
+-  ``order`` (*optional*) - Position of the field - numeric
+-  ``multiline`` (*optional*) - Only applicable to TEXT fields - boolean
+-  ``options`` (*optional*) - Only applicable on ENUM fields - a list of options. Format of options is:
+  
+   .. code-block:: text
+  
+       [{"name": "Option 1"}, {"name": "Option 2", "enable": false}, ...] 
+    
+   where the option order is significant. ``enable`` may be omitted and defaults to ``true``
+
+**Body:** JSON.
+
+**Response codes:** ``400``, ``201``
+
+**Response headers:** ``Location``: a URL to the new custom field.
+
+**Sample request:** ``POST /customfields?title=Custom+Enum+Field&type=ENUM&required=false``
+with JSON body:
+
+.. code-block:: text
+
+  {"options": [{"name": "Option 1"}, {"name": "Option 2", "enable": false}, {"name": "Option 3"}]}
+  
+
+Response Location header: ``https://dev.planetdefine.net/api/2.0/demotest/demotest/customfields/3``
+
+
+Delete Custom Field
+-------------------
+
+**DELETE /customfields/<id or name>** - Delete a customfield. Will add a log entry to all issues affected.
+
+**Response codes:** ``400``, ``204``
+
+
+Update Custom Field
+-------------------
+
+**PUT /customfields/<id or name>**
+
+
+Products
+========
+
+Represents a project's products.
+
+
+List Products
+-------------
+
+**GET /products**
+
+**Parameters:** None.
+
+**Body:** None.
+
+**Response codes:** ``400``, ``200``
+
+**Response headers:** None.
+
+**Sample response:** ``GET /products``
+
+.. code-block:: text
+
+  ...
+
+
+Show Product
+------------
+
+**GET /products/<product id or name>**
+
+**Parameters:** None.
+
+**Body:** None.
+
+**Response codes:** ``400``, ``200``
+
+**Response headers:** None.
+
+**Sample response:** ``GET /products``
+
+.. code-block:: text
+
+  ...
+  
+
+Create Product
+--------------
+
+**POST /products**
+
+**Parameters:** None.
+
+**Body:** JSON.
+
+**Response codes:** ``400``, ``201``
+
+**Response headers:** ``Location``
+
+**Sample request:** ``POST /products``
+
+.. code-block:: text
+
+  ...
+
+
+Delete Product
+--------------
+
+**DELETE /products/<product id or name>**
+
+**Parameters:** None.
+
+**Body:** None.
+
+**Response codes:** ``400``, ``204``
+
+**Response headers:** None.
+
+**Sample request:** ``DELETE /products/5``
+
+
+Update Product
+--------------
+
+**PUT /products/<product id or name>**
+
+**Parameters:** None.
+
+**Body:** None.
+
+**Response codes:** ``400``, ``200``
+
+**Response headers:** None.
+
+**Sample request:** ``PUT /products/5``
+
+.. code-block:: text
+
+  ...
+
+
+Components
+==========
+
+These are the components that comprise a product.
+
+
+List Components
+---------------
+
+**GET /<product id or name>/components**
+
+Show Component
+--------------
+
+**GET /<product id or name>/components/<component id or name>**
+
+Create Component
+----------------
+
+**POST /<product id or name>/components**
+
+-  ``name`` (*required*) - The name of the component
+-  ``owner`` (*optional*) - Component owner
+-  ``qa`` (*optional*) - Component Quality Assurance contact
+-  ``enable`` (*optional*) - Whether component should be enabled. Defaults to ``true``.
+
+Delete Component
+----------------
+
+**DELETE /<product id or name>/components/<component id or name>**
+
+Update Component
+----------------
+
+**PUT /<product id or name>/components/<component id or name>** 
+
+
+
+Versions
+========
+
+These are product versions.
+
+
+List Versions
+-------------
+
+**GET /<product id or name>/versions**
+
+
+Show Version
+------------
+
+**GET /<product id or name>/versions/<version id or name>**
+
+
+Create Version
+--------------
+
+**POST /<product id or name>/versions**
+
+- ``name`` (*required*) - Name of this version
+- ``enable`` (*optional*) - Whether this version should be enabled. Defaults to ``true``
+
+
+Delete Version
+--------------
+
+**DELETE /<product id or name>/versions/<version id or name>**
+
+
+Update Version
+--------------
+
+**PUT /<product id or name>/versions/<version id or name>**
+
+
+Milestones
+==========
+
+Represents the project's milestones.
+
+
+List Milestones
+---------------
+
+**GET /milestones**
+
+
+Show Milestone
+--------------
+
+**GET /milestones/<milestone name or id>**
+
+
+Create Milestone
+----------------
+
+**POST /milestones**
+
+- ``name`` (*required*) - Name of the new milestone.
+- ``due_date`` (*required*) - Due date.
+- ``enable`` (*optional*) - Whether the new milestone should be enabled. Defaults to ``true``.
+- ``description`` (*optional*) - Description of the new milestone.
+
+
+Delete Milestone
+----------------
+
+**DELETE /milestones/<milestone id or name>**
+
+
+Update Milestone
+----------------
+
+**PUT /milestones/<milestone or id>**
+
+
+Timesheets
+==========
+
+A timesheet is more specifically a timesheet entry, which represent work done on an issue by a single user.
+
+
+List Timesheets
+---------------
+
+**GET /timesheets**
+
+
+Show Timesheet
+--------------
+
+**GET /timesheets/<timesheet id or name>**
+
+
+Create Timesheet
+----------------
+
+**POST /timesheets**
+
+- ``time_account`` (*required*) - The assouciated time account.
+- ``user`` (*required*) - The user that did the work.
+- ``issue`` (*required*) - The issue worked on.
+- ``date`` (*required*) - Date when the work was done. (iso date)
+- ``created`` (*optional*) - Date this entry was created. Defaults to current time. (iso date)
+- ``comment`` (*optional*) - Comment for the new entry.
+- ``hours`` (*required*) - Number of hours worked (float/integer).
+
+
+Update Timesheet
+----------------
+
+**PUT /timesheets/<timesheet id or name>**
+
+Delete Timesheet
+----------------
+
+**DELETE /timesheets/<timesheet id or name>**
+
+
+Time Accounts
+=============
+
+Represents the time accounts under which the timesheet entries are stored.
+
+
+List Time Accounts
+------------------
+
+**GET /timeaccounts**
+
+**Parameters:** ``onlyactive`` (*optional*) - Only show active time accounts. Defaults to ``false``.
+
+
+Show Time Account
+-----------------
+
+**GET /timeaccounts/<timeaccount name or id>**
+
+
+Create Time Account
+-------------------
+
+**POST /timeaccounts**
+
+``name`` (*required*) - Name of the new time account (text).
+``reference`` (*required*) - Time Account reference (text).
+``description`` (*required*) - Description (text).
+``active`` (*optional*) - Whether the new time account is activated. Defaults to ``true``.
+
+
+Update Time Account
+-------------------
+
+**PUT /timeaccounts/<timeaccount name or id>**
+
+
+Delete Time Account
+-------------------
+
+**DELETE /timeaccounts/<timeaccount name or id>**
+
+
+List Timesheets for Time Account
+--------------------------------
+
+**GET /timeaccounts/<timeaccount name or id>/timesheets**
+

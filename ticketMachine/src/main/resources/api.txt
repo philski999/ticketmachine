@@ -1,0 +1,97 @@
+===========
+#define API
+===========
+
+.. contents:: Contents
+   :depth: 2
+.. sectnum::
+
+Compromises
+===========
+RESTful services should not keep state. This means the server should not track 
+sessions. However, to improve performance we have decided to use a session 
+tracking cookie. This is because #define is using an external authentication 
+service, specifically a Logica Active Domain server. Calling the authentication
+service on every single request is quite costly, hence the session tracking 
+cookie. In short, to improve the performance of your client and decrease the 
+strain on #define, please use the ``define-session`` cookie sent by the server 
+after the initial authentication.
+
+Data Formats
+============
+Dates: Use `ISO 8601`_ with timezone, ``YYYY-MM-DD(THH:MM:SS.uuuu(Z|+00(:00)))``, 
+eg ``2009-05-04T13:37:01Z``. Timezone may be omitted when there is no time given.
+
+.. _ISO 8601: http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=40874
+
+Errors
+======
+Status code ``400`` (Bad Request) is used whenever there are errors in the input.
+Any error details are reported in the response body. Error ``500`` indicates an
+error on the server side, and should be regarded as a bug (please report any ``500`` 
+responses to the `#define support`_).
+
+.. _#define support: mailto:support@define.nu
+
+
+`Order API <order-api.html>`_
+=============================
+
+See separate `order API documentation <order-api.html>`_
+
+`Tracker API <tracker-api.html>`_
+=================================
+
+See separate `tracker API documentation <tracker-api.html>`_
+
+API Partners
+============
+
+Authentication Process
+----------------------
+
+To allow your service to act 'on behalf' of end-users when using the
+#define REST API, you will send a client SSL certificate as part of
+your HTTP request. This certificate will authenticate your
+service. Inside the HTTP request you will provide an HTTP BASIC
+authorisation header which includes the username that you are 'acting
+on behalf of'. You do not need to send the password of the user.
+
+Note the matching of the username is Case Sensitive. For example, you
+need to send "GROUPINFRA", not "groupinfra".
+
+To arrange your API Partner x509 certificate please request via
+support@define.nu and state:
+
+ * API Partner Name
+ * API Partner administration email address
+ * Public website URL
+ * Description of your service
+ * Which permissions you require (ORDER_VIEW, ACCOUNT_VIEW, etc.)
+ * Which format you require for your x509 certificate (PEM or pkcs12)
+
+Authorization Process
+---------------------
+
+The accounts/projects who wish to use your services then needs to
+visit the API settings page on their account or project.
+
+They will select which permissions (of those you requested to be
+available) apply to the specific account/project.
+
+Example to check your certificate
+---------------------------------
+
+You can use the 'curl' command to verify your access is working as you
+expect.
+
+Provide the email address of the user to impersonate (no password
+needed), and the certificate which #define service management provided
+to you.
+
+.. code-block:: text
+
+ curl -v -k -u "first.last@logica.com:" \
+         -E <certificate filename> \
+       https://dev.planetdefine.net/api/2.0/account1/orders
+
