@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ class Define3TicketEnumerator {
 
 	Define3Adapter adapter;
 	
-    private Logger logger = LoggerFactory.getLogger(Define3TicketEnumerator.class);
+//    private Logger logger = LoggerFactory.getLogger(Define3TicketEnumerator.class);
 	
     @Autowired
     public void setAdapter(Define3Adapter adapter) {
